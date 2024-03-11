@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+    <div style="background-color: #EEEEEE; min-height:100vh">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li
+                        class="nav-item dropdown {% if request.resolver_match.url_name == 'main' or request.resolver_match.url_name == 'completed' or request.resolver_match.url_name == 'pending' %}active{% endif %}">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Tasks
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item {% if request.resolver_match.url_name == 'main' %}active{% endif %}"
+                                href="{% url 'main' %}">All Tasks</a>
+                            <a class="dropdown-item {% if request.resolver_match.url_name == 'completed' %}active{% endif %}"
+                                href="{% url 'completed' %}">Completed Tasks</a>
+                            <a class="dropdown-item {% if request.resolver_match.url_name == 'pending' %}active{% endif %}"
+                                href="{% url 'pending' %}">Pending Tasks</a>
+                        </div>
+                    </li>
+                    <li class="nav-item d-lg-none">
+                        <a class="nav-link" href="#" onclick="redirectToNewTaskPage()">New Task</a>
+                    </li>
+                    <li class="nav-item d-lg-none">
+                        <a class="nav-link" href="#" onclick="logOut()">Logout</a>
+                    </li>
+                    <!-- Search bar -->
+                    <form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"
+                            style="width: 300px;">
+                        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </ul>
+                <!-- New Task Button (visible only on collapsed navbar) -->
+                <button class="btn btn-outline-light my-2 my-sm-0 new-task-button collapsed-nav" type="button"
+                    onclick="redirectToNewTaskPage()">New Task</button>
+                    <button class="btn btn-light my-2 my-sm-0 new-task-button collapsed-nav" type="button"
+                    onclick="logOut()" style="margin-left: 30px;"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+            {% for task in tasks %}
+            <div class="container task-box" style="background-color: white;">
+                <div class="row">
+                    <div class="col">
+                        <h3><b>{{ task.name }}</b> <span class="badge text-bg-secondary">{{ task.priority }}</span></h3>
+                    </div>
+                    <div class="col">
+                        <div class="dropdown" style="margin-left: 75%;">
+                            <form action="{% url 'update_or_delete_entry' %}" method="post">
+                                {% csrf_token %}
+                                <!-- Hidden input field for entry_id -->
+                                <input type="hidden" name="entry_id" value="{{ task.id }}">
+                                <!-- Dropdown button trigger -->
+                                <button class="btn btn-light dropdown-toggle dot-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <b>...</b>
+                                </button>
+                                <!-- Dropdown menu with action buttons -->
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <button class="dropdown-item" type="submit" name="action" value="complete">Task completed</button>
+                                    </li>
+                                    <li>
+                                        <button class="dropdown-item" type="submit" name="action" value="delete">Delete task</button>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <p style="font-size: 19px;">{{ task.desc }}</p>
+                <p><i class="fa-regular fa-calendar">&nbsp;&nbsp;</i> Deadline : {{ task.date }} <i class="fa-regular fa-clock" style="margin-left: 70px;"></i>&nbsp;&nbsp;{{ task.days_remaining }} days <span style="margin-right: 70px;"></span> <i class="fa-solid fa-spinner"></i>&nbsp;&nbsp;Status : {{ task.status }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        function redirectToNewTaskPage() {
+            window.location.href = "{% url 'newtask' %}";
+        }
+
+        function logOut() {
+            window.location.href = "{% url 'logout' %}";
+        }
+    </script>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/ba6db2daaf.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

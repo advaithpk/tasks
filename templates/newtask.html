@@ -1,0 +1,124 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Mochiy+Pop+One&display=swap"
+        rel="stylesheet">
+    <title>New Task</title>
+</head>
+
+<body>
+
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
+        </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+        </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js">
+    </script>
+
+    <div class="container-fluid">
+        <h2 style="margin: 20px 0 0 20px;">New Task</h2>
+        <hr>
+        <div class="container new-task">
+            <div class="container">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <label for="" class="task-label">Task name</label> <br>
+                    <input type="text" name="name" placeholder="Enter task name..." class="new-task-field" autocomplete="off"> <br>
+                    <label for="" class="task-label">Task description</label> <br>
+                    <textarea name="desc" rows="6" cols="110" placeholder="Enter task description..."
+                        class="new-task-field" autocomplete="off"></textarea><br>
+                    <label for="" class="task-label">Due date</label> <br>
+                    <div id="datepicker" class="input-group date" data-date-format="mm-dd-yyyy">
+                        <input name="date" class="form-control" type="text" readonly />
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                    </div>
+                    <label for="">Remind me:</label><br>
+                    <div class="form-group ">
+                        <select id="reminder-days" name="remind" class="form-select new-task-field">
+                            <option value="0">On the day of the deadline</option>
+                            <option value="1">1 day before</option>
+                            <option value="2">2 days before</option>
+                            <option value="3">3 days before</option>
+                        </select>
+                    </div>
+                    <label for="" class="task-label new-task-field">Priority</label><br>
+                    <div class="row">
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priority" id="exampleRadio1"
+                                    value="High">
+                                <label class="form-check-label" for="exampleRadio1">
+                                    High
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priority" id="exampleRadio2"
+                                    value="Medium">
+                                <label class="form-check-label" for="exampleRadio2">
+                                    Medium
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priority" id="exampleRadio3"
+                                    value="Low">
+                                <label class="form-check-label" for="exampleRadio3">
+                                    Low
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" value="Save Task" class="new-task-save btn btn-dark">
+                </form>
+            </div>
+            <div class="container">
+                <img src="{% static 'pic2.png' %}" class="d-none d-lg-block new-task-pic" alt="Large Screen Image">
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function(){
+            // Get today's date
+            var today = new Date();
+            // Set tomorrow's date
+            var tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            $("#datepicker").datepicker({
+                autoclose: true,
+                todayHighlight: true,
+                format: 'dd-mm-yyyy',
+                startDate: tomorrow,
+            }).datepicker('update', new Date());
+          });
+
+    </script>
+
+</body>
+
+</html>
